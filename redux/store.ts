@@ -1,5 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import counterReducer from './counterSlice';
+import todoReducer from './todo/todoSlice';
 
 import {
   persistStore,
@@ -14,17 +15,20 @@ import {
 
 import storage from 'redux-persist/lib/storage';
 
+const rootReducer = combineReducers({
+  counter: counterReducer,
+  todo: todoReducer,
+});
+
 const persistConfig = {
   key: 'root',
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, counterReducer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-  reducer: {
-    counter: persistedReducer,
-  },
+  reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -34,5 +38,6 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -2,6 +2,7 @@
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { increment, decrement } from '../redux/counterSlice';
+import Todo from './components/Todo';
 
 export default function Page() {
   const reduxCount = useAppSelector((state) => state.counter.value);
@@ -12,6 +13,7 @@ export default function Page() {
       <h1>Redux count: {reduxCount}</h1>
       <button onClick={() => dispatch(increment())}>+ Redux</button>
       <button onClick={() => dispatch(decrement())}>- Redux</button>
+      <Todo />
     </main>
   );
 }
