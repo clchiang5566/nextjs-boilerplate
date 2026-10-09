@@ -40,31 +40,28 @@ The content is organized as follows:
 </file_summary>
 
 <directory_structure>
-app/
-  api/
-    hello/
-      route.ts
-  components/
-    Todo/
-      index.tsx
-      Todo.module.scss
-  styles/
-    globals.css
-  layout.tsx
-  page.tsx
-redux/
-  todo/
-    todoSlice.ts
-  counterSlice.ts
-  hooks.ts
-  provider.tsx
-  store.ts
+src/
+  app/
+    api/
+      hello/
+        route.ts
+    components/
+      Todo/
+        index.tsx
+        Todo.module.scss
+    store/
+      use-todo-store.ts
+    styles/
+      globals.css
+    layout.tsx
+    page.tsx
 utils/
   axiosInstance.ts
 .eslintrc.json
 .gitignore
 .prettierrc
 next-env.d.ts
+next.config.ts
 package.json
 README.md
 tsconfig.json
@@ -73,69 +70,59 @@ tsconfig.json
 <files>
 This section contains the contents of the repository's files.
 
-<file path="app/components/Todo/index.tsx">
+<file path="src/app/api/hello/route.ts">
+import { NextResponse } from 'next/server';
+
+export async function GET() {
+  return NextResponse.json({ message: 'Hello from API Route!' });
+}
+</file>
+
+<file path="src/app/components/Todo/index.tsx">
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import { Formik, Field, Form, FormikHelpers, FormikProps } from 'formik';
-
-import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
-import { addTodo, resetTodo } from '../../../redux/todo/todoSlice';
-
+import React, { useState, FormEvent } from 'react';
+import { useTodoStore } from '@/store/use-todo-store';
 import style from './Todo.module.scss';
 
-interface FormValues {
-  title: string;
-}
-
 const Todo: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const formRef = useRef<FormikProps<FormValues>>(null);
+  const { todos, addTodo, resetTodo } = useTodoStore();
+  const [taskText, setTaskText] = useState('');
 
-  const todos = useAppSelector((state) => state.todo.items);
-
-  const onSubmitHandler = (
-    values: FormValues,
-    actions: FormikHelpers<FormValues>
-  ) => {
-    dispatch(addTodo({ id: todos.length + 1, text: values.title }));
-    actions.resetForm();
+  const onSubmitHandler = (e: FormEvent) => {
+    e.preventDefault();
+    if (!taskText.trim()) return;
+    addTodo(taskText);
+    setTaskText('');
   };
-
-  const resetHandler = () => {
-    dispatch(resetTodo());
-  };
-
-  useEffect(() => {
-    formRef?.current?.resetForm();
-  }, [todos]);
 
   return (
     <div className={style.container}>
       <div className={style.formContainer}>
-        <Formik
-          innerRef={formRef}
-          initialValues={{ title: '' }}
-          onSubmit={onSubmitHandler}
-        >
-          <Form>
-            <div className={style.formItem}>
-              <label htmlFor="title">Task</label>
-              <Field id="title" name="title" placeholder="New Todo" />
-            </div>
-            <button type="submit">Submit</button>
-          </Form>
-        </Formik>
+        <form onSubmit={onSubmitHandler}>
+          <div className={style.formItem}>
+            <label htmlFor="title">Task</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              value={taskText}
+              onChange={(e) => setTaskText(e.target.value)}
+              placeholder="New Todo"
+            />
+          </div>
+          <button type="submit">Submit</button>
+        </form>
       </div>
 
       <div className={style.operations}>
-        <button onClick={resetHandler}>Reset</button>
+        <button onClick={resetTodo}>Reset</button>
       </div>
 
       <div className="todoList">
-        <h2>To do:</h2> {todos?.length}
+        <h2>To do: {todos.length}</h2>
         <ul>
-          {todos?.map((item) => (
+          {todos.map((item) => (
             <li key={item.id}>{item.text}</li>
           ))}
         </ul>
@@ -147,7 +134,7 @@ const Todo: React.FC = () => {
 export default Todo;
 </file>
 
-<file path="app/components/Todo/Todo.module.scss">
+<file path="src/app/components/Todo/Todo.module.scss">
 .container {
   width: 300px;
   padding: 1em;
@@ -198,49 +185,15 @@ export default Todo;
 }
 </file>
 
-<file path="redux/todo/todoSlice.ts">
-// redux/todo/todoSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+<file path="src/app/store/use-todo-store.ts">
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
 
-export interface TodoItem {
-  id: number;
-  text: string;
-}
-
-interface TodoState {
-  items: TodoItem[];
-}
-
-const initialState: TodoState = {
-  items: [],
-};
-
-const todoSlice = createSlice({
-  name: 'todo',
-  initialState,
-  reducers: {
-    addTodo(state, action: PayloadAction<TodoItem>) {
-      state.items.push(action.payload);
-    },
-    resetTodo(state) {
-      state.items = [];
-    },
-  },
-});
-
-export const { addTodo, resetTodo } = todoSlice.actions;
-export default todoSlice.reducer;
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/basic-features/typescript for more information.
 </file>
 
-<file path="app/api/hello/route.ts">
-import { NextResponse } from 'next/server';
-
-export async function GET() {
-  return NextResponse.json({ message: 'Hello from API Route!' });
-}
-</file>
-
-<file path="app/styles/globals.css">
+<file path="src/app/styles/globals.css">
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -248,7 +201,7 @@ body {
 }
 </file>
 
-<file path="app/layout.tsx">
+<file path="src/app/layout.tsx">
 import './styles/globals.css';
 import { ReactNode } from 'react';
 import { Providers } from '../redux/provider';
@@ -264,7 +217,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 }
 </file>
 
-<file path="app/page.tsx">
+<file path="src/app/page.tsx">
 'use client';
 
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
@@ -286,97 +239,12 @@ export default function Page() {
 }
 </file>
 
-<file path="redux/counterSlice.ts">
-import { createSlice } from '@reduxjs/toolkit';
+<file path="next.config.ts">
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
 
-const counterSlice = createSlice({
-  name: 'counter',
-  initialState: { value: 0 },
-  reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-  },
-});
-
-export const { increment, decrement } = counterSlice.actions;
-export default counterSlice.reducer;
-</file>
-
-<file path="redux/hooks.ts">
-// redux/hooks.ts
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import type { RootState, AppDispatch } from './store';
-
-export const useAppDispatch = () => useDispatch<AppDispatch>();
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-</file>
-
-<file path="redux/provider.tsx">
-'use client';
-
-import { Provider } from 'react-redux';
-import { store, persistor } from './store';
-import { PersistGate } from 'redux-persist/integration/react';
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        {children}
-      </PersistGate>
-    </Provider>
-  );
-}
-</file>
-
-<file path="redux/store.ts">
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
-import counterReducer from './counterSlice';
-import todoReducer from './todo/todoSlice';
-
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
-
-import storage from 'redux-persist/lib/storage';
-
-const rootReducer = combineReducers({
-  counter: counterReducer,
-  todo: todoReducer,
-});
-
-const persistConfig = {
-  key: 'root',
-  storage,
-};
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
-});
-
-export const persistor = persistStore(store);
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/basic-features/typescript for more information.
 </file>
 
 <file path="utils/axiosInstance.ts">
@@ -445,41 +313,10 @@ yarn-error.log*
 <file path="next-env.d.ts">
 /// <reference types="next" />
 /// <reference types="next/image-types/global" />
+/// <reference path="./.next/types/routes.d.ts" />
 
 // NOTE: This file should not be edited
-// see https://nextjs.org/docs/basic-features/typescript for more information.
-</file>
-
-<file path="package.json">
-{
-  "name": "nextjs-boilerplate",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@reduxjs/toolkit": "^1.9.5",
-    "axios": "^1.4.0",
-    "formik": "^2.4.6",
-    "next": "14.1.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-redux": "^8.0.5",
-    "redux-persist": "^6.0.0",
-    "sass": "^1.89.2"
-  },
-  "devDependencies": {
-    "@types/node": "24.0.13",
-    "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "@typescript-eslint/parser": "^5.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-next": "14.1.0",
-    "typescript": "^5.0.0"
-  }
-}
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
 </file>
 
 <file path="README.md">
@@ -487,15 +324,40 @@ yarn-error.log*
 test
 </file>
 
+<file path="package.json">
+{
+  "name": "nextjs-boilerplate",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sass": "^1.89.2",
+    "zustand": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^15.1.0",
+    "typescript": "^5.5.0"
+  }
+}
+</file>
+
 <file path="tsconfig.json">
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -503,26 +365,19 @@ test
     "noEmit": true,
     "esModuleInterop": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
 }
 </file>
 
