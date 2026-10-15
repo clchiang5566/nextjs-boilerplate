@@ -1,0 +1,737 @@
+@use '../../styles/utils/variables' as *;
+@use '../../styles/utils/mixins' as *;
+$menuHeightMobile: 60px;
+$menuHeightMinimized: 60px;
+
+.el {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $z-header;
+  transition: all 0.4s;
+  background-color: lightgray;
+  & > .container {
+    height: 100px;
+    position: relative;
+    @include tablet {
+      border-bottom: 1px solid $color-theme-25;
+    }
+  }
+  & > .container {
+    @include tablet {
+      height: $menuHeightMobile;
+    }
+  }
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: $container-md;
+    margin: 0 auto;
+    transition: all 0.4s ease-in-out;
+    // @include tablet {
+    //   height: 60px;
+    // }
+  }
+
+  .logo {
+    position: relative;
+    display: block;
+    max-width: 150px;
+    transition: all 0.4s ease-in-out;
+    margin-top: 20px;
+    @include tablet {
+      margin-top: 6px;
+    }
+    img {
+      max-width: 100%;
+      transition: opacity 0.4s;
+    }
+    @include tablet {
+      max-width: 100px;
+    }
+    .logoWhite {
+      .scrolled & {
+        opacity: 0;
+      }
+    }
+    .logoBlue {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+    }
+  }
+
+  .right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    transition: margin 0.4s ease-in-out;
+    @include tablet {
+      display: block;
+      position: fixed;
+      left: 100%;
+      top: $menuHeightMobile;
+      width: 100%;
+      height: calc(100vh - $menuHeightMobile);
+      overflow-y: auto;
+      background: #fff;
+      transition: left 0.5s;
+      &.open {
+        // display: block;
+        left: 0;
+      }
+    }
+    // fix iOS 13
+    &.expanded {
+      @supports (-webkit-touch-callout: none) {
+        @include tablet {
+          top: 0;
+          padding-top: $menuHeightMobile;
+          height: 100vh;
+        }
+      }
+    }
+  }
+
+  .secondNav {
+    display: flex;
+    // overflow: hidden;
+    max-height: 50px;
+    transition: all 0.4s ease-in-out;
+    @include tablet {
+      display: block;
+      width: 100%;
+      padding: 6px 0 0 0;
+      height: auto;
+      max-height: none;
+      // border-top: 1px solid $color-theme-25;
+    }
+    &Item {
+      position: relative;
+      margin: 10px 12px 0;
+      padding: 14px 0 12px;
+      @include tablet {
+        margin: 0;
+        border-top: 1px solid $color-theme-25;
+        &:first-child {
+          border-top: none;
+        }
+      }
+      &,
+      > a {
+        color: #fff;
+        font-size: 12px;
+        line-height: 14px;
+        text-transform: uppercase;
+        @include tablet {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+      a {
+        display: flex;
+        align-items: center;
+        @include tablet {
+          align-items: flex-start;
+        }
+        span {
+          font-size: 133%;
+          line-height: 14px;
+          margin-left: 5px;
+          margin-bottom: -4px;
+        }
+      }
+      &.search {
+        margin-left: 0;
+        @include tablet {
+          display: none;
+        }
+        a span {
+          margin-left: 9px;
+          margin-bottom: -6px;
+        }
+        &:before {
+          content: ' ';
+          position: absolute;
+          top: 48%;
+          transform: translateY(-50%);
+          width: 0;
+          height: 10px;
+          border-left: 1px solid #fff;
+        }
+      }
+    }
+    &Pop {
+      position: absolute;
+      z-index: 10;
+      display: none;
+      width: 100%;
+      margin-top: 6px;
+      text-align: center;
+      background: #fff;
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      @include tablet {
+        position: relative;
+        display: block;
+        max-height: 0;
+        overflow: hidden;
+        box-shadow: none;
+        margin-top: 0;
+        transition: all 0.3s ease-in-out;
+        text-align: left;
+      }
+      &.active {
+        display: block;
+        @include tablet {
+          max-height: 100px;
+          padding: 10px 0 0;
+        }
+      }
+      a {
+        color: $color-theme;
+        padding: 13px;
+        justify-content: center;
+        @include tablet {
+          padding: 3px 12px;
+          justify-content: flex-start;
+        }
+        &:hover {
+          background: #e9e9ef;
+        }
+      }
+    }
+  }
+
+  .arrowDown {
+    border-style: solid;
+    border-color: inherit;
+    border-width: 0 1px 1px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(45deg);
+    margin-bottom: 2px !important;
+    @include tablet {
+      align-self: center;
+      margin-bottom: 3px !important;
+      padding: 4px;
+      &.active {
+        transform: rotate(225deg);
+      }
+    }
+  }
+
+  .hasChild {
+    cursor: pointer;
+    @include tablet {
+      width: 100%;
+      justify-content: space-between;
+      padding-right: 20px;
+    }
+  }
+
+  .mainNav {
+    display: flex;
+    @include tablet {
+      display: block;
+      padding: 0 0 20px 0;
+      width: 100%;
+    }
+    &Item {
+      position: relative;
+      margin: 0 12px;
+      padding: 12px 0 23px;
+      @include tablet {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        padding: 22px 0 20px;
+        margin: 0;
+        border-bottom: 1px solid $color-theme-25;
+      }
+      &.active,
+      &:hover {
+        &:after {
+          content: ' ';
+          position: absolute;
+          width: 100%;
+          height: 0;
+          left: 0;
+          bottom: 0;
+          border-bottom: 1px solid #fff;
+          @include tablet {
+            display: none;
+          }
+        }
+      }
+      // &:hover {
+      &.isOpen {
+        .megaWrap {
+          // left: 0;
+          max-height: calc(100vh - 60px);
+          border-top: 1px solid $color-theme-25;
+          overflow: auto;
+          @include tablet {
+            max-height: none;
+            border: none;
+            overflow: hidden;
+          }
+        }
+      }
+      &,
+      > a {
+        color: #fff;
+        font-size: 14px;
+        line-height: 1;
+        font-weight: 600;
+        @include tablet {
+          font-size: 18px;
+        }
+      }
+      a {
+        display: flex;
+        align-items: center;
+        span {
+          font-size: 5.5px;
+          margin-top: 3px;
+          margin-left: 8px;
+          @include tablet {
+            display: none;
+            // font-size: 16px;
+            // margin-top: 5px;
+            // &:before {
+            //   content: '\62';
+            // }
+          }
+        }
+      }
+    }
+    .expandBtn {
+      display: none;
+      font-size: 21px;
+      color: $color-theme1;
+      padding: 0 15px 0 17px;
+      &:before {
+        content: ' ';
+        position: absolute;
+        top: 0;
+        margin-left: -17px;
+        width: 0;
+        height: 60px;
+        border-left: 1px solid $color-theme-25;
+      }
+      @include tablet {
+        display: block;
+      }
+    }
+  }
+  .megaWrap {
+    position: fixed;
+    overflow: hidden;
+    left: 0;
+    margin-top: 22px;
+    width: 100%;
+    height: auto;
+    max-height: 0;
+    // border-top: 1px solid $color-theme-25;
+    background: #fff;
+    transition: max-height 0.5s ease-in-out;
+    @include tablet {
+      left: 100%;
+      top: 0;
+      margin: 0;
+      height: 100vh;
+      max-height: none;
+      z-index: 110;
+      transition: left 0.3s ease-in-out;
+    }
+    &.active {
+      @include tablet {
+        left: 0;
+        transition: left 0.6s ease-in-out;
+      }
+    }
+    .mobileHeader {
+      display: none;
+      height: 60px;
+      border-bottom: 1px solid $color-theme-25;
+      padding: 0 $mobile-padding;
+      @include tablet {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      h5 {
+        font-size: 24px;
+        line-height: 1.1;
+        font-weight: 600;
+      }
+      .backBtn {
+        font-size: 24px;
+        margin-top: 8px;
+        span {
+          display: inline-block;
+          transform: scaleX(-1);
+        }
+      }
+      .closeBtn {
+        font-size: 24px;
+        margin-top: 8px;
+      }
+    }
+    .container {
+      position: relative;
+      padding-top: 0;
+      padding-bottom: 0;
+      align-items: stretch;
+      .subnavs {
+        width: 43%;
+        padding: 60px 3% 60px 0;
+        @include tablet {
+          width: 100%;
+          padding: 53px 40px;
+          position: relative;
+          &:before {
+            content: ' ';
+            left: 0;
+            top: 0;
+            width: 0;
+            height: 100vh;
+            position: absolute;
+            border-left: 1px solid $color-theme-25;
+          }
+        }
+        a {
+          color: $color-theme;
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 1.2;
+          align-items: center;
+          white-space: nowrap;
+          margin-bottom: 25px;
+          @include desktop {
+            font-size: 18px;
+          }
+          @include tablet {
+            // font-weight: 600;
+            // font-size: 20px;
+            // line-height: 1.1;
+            padding: 7px 0;
+            color: $color-theme1;
+          }
+          &.leftPadding {
+            padding-left: 20px !important;
+          }
+          &.orange {
+            color: $color-theme1;
+          }
+          &.default {
+            color: $color-theme;
+          }
+          span {
+            font-size: 24px;
+            margin-bottom: 0;
+            transition: transform 0.3s;
+          }
+          &:hover {
+            span {
+              transform: translateX(20px);
+            }
+          }
+        }
+      }
+      .info {
+        width: 57%;
+        display: flex;
+        align-items: flex-start;
+        padding: 60px 0 60px 5%;
+        border-left: 1px solid $color-theme-25;
+        @include tablet {
+          display: none;
+        }
+        & > * {
+          width: 50%;
+        }
+        .image {
+          position: relative;
+          width: 50%;
+          height: 100%;
+          max-width: 345px;
+          margin-right: 20px;
+
+          img {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            object-fit: contain;
+            object-position: top center;
+          }
+        }
+        .content {
+          .tag {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.2;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: #fff;
+            background: $color-theme1;
+            padding: 3px 5px;
+            margin-bottom: 20px;
+          }
+          .description {
+            color: $color-theme;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.3;
+          }
+          .cta {
+            margin-top: 40px;
+            a {
+              color: $color-theme1;
+              span {
+                font-size: 24px;
+                transition: transform 0.3s;
+              }
+              &:hover {
+                span {
+                  transform: translateX(20px);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .mobileRight {
+    position: relative;
+    display: none;
+    @include tablet {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .searchBtnMobile {
+    display: block;
+    font-size: 24px;
+    line-height: 1;
+    color: #fff;
+    padding: 0 4px;
+    margin: 2px 18px -8px;
+  }
+  .mobileMenuBtn {
+    position: relative;
+    display: none;
+    @include tablet {
+      display: block;
+    }
+    span {
+      display: block;
+      width: 15px;
+      height: 2px;
+      background: #fff;
+      border-radius: 1px;
+      position: absolute;
+      top: 15px;
+      transform-origin: center;
+      transition: transform 0.3s ease-out, opacity 0.3s;
+      &:first-child {
+        width: 20px;
+        transform: translateY(-7px);
+      }
+      &:nth-child(3) {
+        width: 20px;
+        transform: translateY(7px);
+      }
+    }
+    &:before {
+      content: ' ';
+      display: block;
+      background: rgba(255, 255, 255, 0);
+      width: 30px;
+      height: 30px;
+    }
+    &.active {
+      span {
+        &:nth-child(2) {
+          opacity: 0;
+        }
+        &:first-child {
+          transform: rotate(45deg);
+        }
+        &:nth-child(3) {
+          transform: rotate(-45deg);
+        }
+      }
+    }
+  }
+  .mobileMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    @include tablet {
+      // display: none;
+      width: 100%;
+      height: auto;
+      min-height: 100%;
+      padding: 0 $mobile-padding 30px;
+      background: #fff;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+  .social {
+    display: none;
+    align-items: center;
+    margin-top: 15px;
+    @include tablet {
+      display: flex;
+    }
+    a {
+      display: block;
+      margin: 0 8px;
+      color: $color-theme;
+      &:first-child {
+        margin-left: 0;
+      }
+      span {
+        font-size: 32px;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  &.noSplash {
+    border-bottom: 1px solid $color-theme-25;
+    @include tablet {
+      border-bottom: none;
+    }
+  }
+  &.scrolled,
+  &.noSplash {
+    background-color: white;
+    .logoWhite {
+      opacity: 0;
+    }
+    .logoBlue {
+      opacity: 1;
+    }
+    .mainNavItem {
+      &,
+      > a {
+        color: $color-theme;
+      }
+      &.active,
+      &:hover {
+        &:after {
+          border-bottom: 1px solid $color-theme;
+        }
+      }
+    }
+    .secondNavItem {
+      &,
+      > a {
+        color: $color-theme;
+      }
+      &.search {
+        &:before {
+          border-left: 1px solid $color-theme;
+        }
+      }
+    }
+    .mobileMenuBtn {
+      span {
+        background: $color-theme;
+      }
+    }
+    .searchBtnMobile {
+      color: $color-theme;
+    }
+  }
+  &.minimized {
+    background-color: white;
+    & > .container {
+      height: $menuHeightMinimized;
+      @include tablet {
+        height: $menuHeightMobile;
+      }
+    }
+    .secondNav {
+      max-height: 0;
+      overflow: hidden;
+      @include tablet {
+        height: auto;
+        max-height: none;
+      }
+    }
+    .logo {
+      max-width: 110px;
+      margin-top: 6px;
+      @include tablet {
+        max-width: 100px;
+      }
+    }
+    .right {
+      margin-top: 12px;
+      @include tablet {
+        margin-top: 0;
+      }
+    }
+    .searchBtnMobile {
+      color: $color-theme;
+    }
+  }
+  .searchBox {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-height: 0;
+    transition: all 0.4s ease-in-out;
+    background: #fff;
+    &.active {
+      border-top: 1px solid $color-theme-25;
+      max-height: 240px;
+      @include tablet {
+        border-top: none;
+      }
+    }
+    &.hide {
+      max-height: 0;
+    }
+    .wrapper {
+      width: 100%;
+      padding: 90px 37px;
+      @include mobile {
+        padding: 40px 0;
+      }
+    }
+    .searchInput {
+      border: none;
+      border-bottom: 1px solid $color-theme-25;
+      width: 100%;
+      padding: 0 0 20px;
+      font-weight: 600;
+      font-size: 32px;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: $color-theme;
+      @include mobile {
+        font-size: 24px;
+      }
+    }
+    .searchSubmit {
+      position: absolute;
+      color: $color-theme1;
+      font-size: 24px;
+      margin-top: 7px;
+      transform: translateX(-100%);
+      cursor: pointer;
+    }
+  }
+}

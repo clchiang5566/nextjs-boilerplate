@@ -1,13 +1,11 @@
-'use client';
-
-import { useTodoStore } from '@/store/use-todo-store';
+import Todo from '@/components/Todo';
 
 export default function Page() {
-  const { count, hasHydrated } = useTodoStore();
-  
   return (
     <main>
-      <h1>Count: {hasHydrated ? count : '...'}</h1>
+      <h1>About</h1>
+      <p>This page demonstrates page-level metadata in the App Router.</p>
+      <Todo />
     </main>
   );
 }

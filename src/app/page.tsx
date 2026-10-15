@@ -1,17 +1,23 @@
-'use client';
+import Todo from '@/components/Todo';
+import { getHomePage } from '@/lib/api/homePage';
 
-import { useTodoStore } from '@/store/use-todo-store';
-import Todo from './components/Todo';
-
-export default function Page() {
-  const { count, increment, decrement } = useTodoStore();
+export default async function Page() {
+  const homePageData = await getHomePage();
 
   return (
-    <main>
-      <h1>Count: {count}</h1>
-      <button onClick={increment}>+ Add</button>
-      <button onClick={decrement} style={{ marginLeft: 8 }}>- Sub</button>
+    <main className='main-content' id='main-content'>
       <Todo />
+      <section style={{ marginTop: 24 }}>
+        <h2>Home data</h2>
+        <ul>
+          {homePageData.map((item) => (
+            <li key={item.id}>
+              <strong>{item.title}</strong>
+              <div>{item.body}</div>
+            </li>
+          ))}
+        </ul>
+      </section>
     </main>
   );
 }

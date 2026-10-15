@@ -1,12 +1,18 @@
 'use client';
 
 import React, { useState, FormEvent } from 'react';
+import { useAppStore } from '@/store/app-store';
 import { useTodoStore } from '@/store/use-todo-store';
 import style from './Todo.module.scss';
 
 const Todo: React.FC = () => {
-  const { todos, addTodo, resetTodo } = useTodoStore();
+  const { todos, addTodo, resetTodo, hasHydrated } = useTodoStore();
+  const { menuOpen, setMenuOpen, toggleMenuOpen } = useAppStore();
   const [taskText, setTaskText] = useState('');
+
+  if (!hasHydrated) {
+    return <div className={style.container}>Loading...</div>;
+  }
 
   const onSubmitHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -45,6 +51,18 @@ const Todo: React.FC = () => {
             <li key={item.id}>{item.text}</li>
           ))}
         </ul>
+      </div>
+
+      <div style={{ marginTop: 16, padding: 12 }}>
+        <h3>Menu state</h3>
+        <p>menuOpen: {menuOpen ? 'true' : 'false'}</p>
+        <button onClick={() => setMenuOpen(true)}>Open</button>
+        <button onClick={() => setMenuOpen(false)} style={{ marginLeft: 8 }}>
+          Close
+        </button>
+        <button onClick={toggleMenuOpen} style={{ marginLeft: 8 }}>
+          Toggle
+        </button>
       </div>
     </div>
   );

@@ -1,0 +1,63 @@
+//*** Responsive breakpoints ***//
+$mobile-m-bp: 425px; // below portrait
+$mobile-bp: 599px; // mobile
+$tablet-bp: 767px; // tablet medium
+$tablet-l-bp: 1080px; // below landscape
+$desktop-bp: 1024px; // below mini desktop
+$desktop-sm-bp: 1199px; // below small desktop
+$desktop-md-bp: 1439px; // below middle desktop
+
+//*** Container Max-Width ***//
+$container-fr: 640px;
+$container-tb: 800px;
+$container-mi: 1078px;
+$container-inner: 1236px;
+$container-xs: 860px;
+$container-sm: 1300px;
+$container-md: 1440px;
+$container-fhd: 1920px;
+
+//*** Container Padding ***//
+$container-p: 30px;
+$mobile-padding: 20px;
+
+//*** Colors ***//
+$color-theme: #232323;
+$color-theme-10: #b9b9b9;
+$color-theme-25: #ababab;
+$color-theme-80: #444444;
+$color-theme1: #E60000;
+$color-text: $color-theme;
+$color-secondary: #3A74B4;
+$color-grey: #f7f7f7;
+$color-theme2: #d3d3d3;
+$color-gradient: linear-gradient(180deg, rgba(0, 225, 244, 0.8) 0%, rgba(0, 225, 244, 0.35) 63.02%, rgba(0, 225, 244, 0.1) 86.98%, rgba(0, 225, 244, 0) 100%);
+$color-blue: blue;
+$color-red: red;
+$color-green: green;
+$color-grey2: grey;
+$color-grey-light: lightgrey;
+$color-black: black;
+$color-white: white;
+$color-charcoal: grey;
+$color-light-grey: darkgrey;
+$color-grey-30: darkgrey;
+$color-grey-80: rgb(79, 79, 79);
+$color-grey-300: rgb(60, 59, 59);
+$color-grey-600: rgb(84, 76, 76);
+$color-blue-500: rgb(34, 34, 213);
+$color-blue-light: lightblue;
+$color-yellow: yellow;
+
+
+//*** Font ***//
+$f-body: Frutiger, Helvetica, Arial, sans-serif;
+$f-heading: Frutiger, Helvetica, Arial, sans-serif;
+
+//*** Z-Index ***//
+$z-header: 100000000;
+$z-header-item: 101;
+
+//* Z-Index *//
+$z-modal-overlay: 500;
+$z-filter-popup: 400;

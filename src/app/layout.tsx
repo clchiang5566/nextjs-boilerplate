@@ -1,15 +1,36 @@
-import '@/app/styles/globals.css';
+import '@/styles/global.scss';
 import { ReactNode } from 'react';
+import type { Metadata } from 'next';
+import { AppProvider } from '@/providers/AppProvider';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
-export const metadata = {
-  title: 'Next.js 15 Boilerplate',
-  description: 'Modern Next.js 15 & React 19 Starter Kit',
+export const metadata: Metadata = {
+  title: {
+    default: 'Brand',
+    template: '%s | Brand',
+  },
+  description: 'Default site description',
+  icons: {
+    icon: '/favicon.ico',
+  },
+  openGraph: {
+    title: 'Brand',
+    description: 'Default site description',
+    url: 'https://example.com',
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <AppProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </AppProvider>
+      </body>
     </html>
   );
 }

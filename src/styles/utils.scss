@@ -1,0 +1,17 @@
+@forward './utils/variables';
+@forward './utils/mixins';
+
+.desktopImg{
+    display: block !important;
+}
+.mobileImg{
+    display: none !important;
+}
+@media (max-width:767px) {
+    .desktopImg{
+        display: none !important;
+    }
+    .mobileImg{
+        display: block !important;
+    }
+}
